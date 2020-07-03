@@ -65,7 +65,7 @@ class ScanPresenter constructor(private val context: Context, private val iView:
         mCamera?.autoFocus { b, _ ->
             Log.i(TAG, "focus result: " + b)
             mCamera?.takePicture(null, null, this)
-            MediaActionSound().play(MediaActionSound.SHUTTER_CLICK)
+//             MediaActionSound().play(MediaActionSound.SHUTTER_CLICK)
         }
     }
 
