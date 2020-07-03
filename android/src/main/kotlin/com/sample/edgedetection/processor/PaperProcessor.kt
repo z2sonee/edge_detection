@@ -110,7 +110,16 @@ private fun getCorners(contours: ArrayList<MatOfPoint>, size: Size): Corners? {
             // select biggest 4 angles polygon
             if (points.size == 4) {
                 val foundPoints = sortPoints(points)
-                return Corners(foundPoints, size)
+//                 return Corners(foundPoints, size)
+                if((foundPoints[3].x >= (foundPoints[0].x - 35)) && (foundPoints[3].x <= (foundPoints[0].x + 35)))
+                    if((foundPoints[2].x >= (foundPoints[1].x - 35)) && (foundPoints[2].x <= (foundPoints[1].x + 35)))
+                        if((foundPoints[1].y >= (foundPoints[0].y - 35)) && (foundPoints[1].y <= (foundPoints[0].y + 35)))
+                            if((foundPoints[2].y >= (foundPoints[3].y - 35)) && (foundPoints[2].y <= (foundPoints[3].y + 35)))
+                                if(((foundPoints[3].y - foundPoints[0].y) >= 800) && ((foundPoints[3].y - foundPoints[0].y) <= 900))
+                                    if(((foundPoints[1].x - foundPoints[0].x) >= 450) && ((foundPoints[1].x - foundPoints[0].x) <= 620)) {
+                                        Log.i(TAG, ">>>>>>>>>>>>>>>>>>>> result : " + foundPoints)
+                                        return Corners(foundPoints, size)
+                                    }
             }
         } else {
             return null
