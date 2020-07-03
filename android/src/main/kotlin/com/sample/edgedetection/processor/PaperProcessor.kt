@@ -75,10 +75,15 @@ private fun findContours(src: Mat): ArrayList<MatOfPoint> {
     cannedImage = Mat(size, CvType.CV_8UC1)
     dilate = Mat(size, CvType.CV_8UC1)
 
-    Imgproc.cvtColor(src, grayImage, Imgproc.COLOR_RGBA2GRAY)
+//     Imgproc.cvtColor(src, grayImage, Imgproc.COLOR_RGBA2GRAY)
+//     Imgproc.GaussianBlur(grayImage, grayImage, Size(5.0, 5.0), 0.0)
+//     Imgproc.threshold(grayImage, grayImage, 20.0, 255.0, Imgproc.THRESH_TRIANGLE)
+//     Imgproc.Canny(grayImage, cannedImage, 75.0, 200.0)
+//     Imgproc.dilate(cannedImage, dilate, kernel)
+    Imgproc.cvtColor(src, grayImage, Imgproc.COLOR_RGB2GRAY)
     Imgproc.GaussianBlur(grayImage, grayImage, Size(5.0, 5.0), 0.0)
-    Imgproc.threshold(grayImage, grayImage, 20.0, 255.0, Imgproc.THRESH_TRIANGLE)
-    Imgproc.Canny(grayImage, cannedImage, 75.0, 200.0)
+    Imgproc.Canny(grayImage, cannedImage, 65.0, 160.0)
+    Imgproc.morphologyEx(grayImage, grayImage, Imgproc.MORPH_CLOSE, kernel) // 감지된 하얀색 선을 더 명확하게 굵게 강조시켜줌
     Imgproc.dilate(cannedImage, dilate, kernel)
 
     val contours = ArrayList<MatOfPoint>()
