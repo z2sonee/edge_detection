@@ -44,6 +44,7 @@ class ScanPresenter constructor(private val context: Context, private val iView:
     private val executor: ExecutorService
     private val proxySchedule: Scheduler
     private var busy: Boolean = false
+    public var pictureDetected = 0
 
     init {
         mSurfaceHolder.addCallback(this)
@@ -170,7 +171,7 @@ class ScanPresenter constructor(private val context: Context, private val iView:
                     val pic = Imgcodecs.imdecode(mat, Imgcodecs.CV_LOAD_IMAGE_UNCHANGED)
                     Core.rotate(pic, pic, Core.ROTATE_90_CLOCKWISE)
                     mat.release()
-                    SourceManager.corners = processPicture(pic)
+//                     SourceManager.corners = processPicture(pic)
                     Imgproc.cvtColor(pic, pic, Imgproc.COLOR_RGB2BGRA)
                     SourceManager.pic = pic
 
@@ -212,6 +213,7 @@ class ScanPresenter constructor(private val context: Context, private val iView:
 
                     Observable.create<Corners> {
                         val corner = processPicture(img)
+                        SourceManager.corners = corner
                         busy = false
                         if (null != corner) {
                             it.onNext(corner)
@@ -221,6 +223,17 @@ class ScanPresenter constructor(private val context: Context, private val iView:
                     }.observeOn(AndroidSchedulers.mainThread())
                             .subscribe({
                                 iView.getPaperRect().onCornersDetected(it)
+                                
+                                pictureDetected++
+                                
+                                try {
+                                    if(pictureDetected == 8) {
+                                        shut() // 사진 촬영
+                                        pictureDetected = 0 // 사진 찍은 후, 다시 0으로 초기화
+                                    }
+                                } catch (e: NumberFormatException) {
+                                    Log.i(TAG, ">>>>> error for auto shut !")
+                                }
 
                             }, {
                                 iView.getPaperRect().onCornersNotDetected()
